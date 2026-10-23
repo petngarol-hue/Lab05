@@ -1,4 +1,8 @@
+
 import flet as ft
+from flet.controls import alignment
+from flet.controls.core import icon
+
 from alert import AlertManager
 from deposito_strumenti import DepositoStrumenti
 
@@ -36,7 +40,31 @@ def main(page: ft.Page):
     lista_strumenti = ft.ListView(expand=True, spacing=5, padding=10, auto_scroll=True)
 
     # Tutti i TextField per le info necessarie per aggiungere un nuovo strumento (tipo, marca, anno, contatore posti)
+    def handler_plus(e):
+        count = 0
+        count = float(input_value.value)
+        count += 1
+        input_value.value = count
+        page.update()
+
+    def handler_minus(e):
+        count = 0
+        count = int(input_value.value)
+        count -= 1
+        input_value.value = count
+        page.update()
+
     # TODO
+    input_tipo = ft.TextField(label="Tipo")
+    input_marca= ft.TextField(label="Marca")
+    input_anno= ft.TextField(label="Anno di acquisto")
+
+    MyBtnplus= ft.IconButton(icon=ft.Icons.ADD, on_click=handler_plus, icon_color=ft.Colors.GREEN)
+    MyBtnmin=  ft.IconButton(icon=ft.Icons.REMOVE,on_click=handler_minus, icon_color=ft.Colors.RED)
+    input_value= ft.TextField(value="0" , width=50, height=50)
+
+
+
 
     # --- FUNZIONI APP ---
     def aggiorna_lista_strumenti():
@@ -46,6 +74,20 @@ def main(page: ft.Page):
             lista_strumenti.controls.append(ft.Text(f"{stato} {strumento}"))
 
     # --- HANDLERS APP ---
+    def aggiunta():
+        if not input_anno.value.isdigit():
+            alert.show_alert("l'anno non è un valore numerico")
+        if not input_value.value.isdigit():
+            alert.show_alert("Il valore del strumento non è un valore numerico")
+
+        deposito.aggiungi_strumento(input_tipo.value, input_marca.value, input_anno.value,input_value.value)
+        input_tipo.value=""
+        input_marca.value=""
+        input_anno.value=""
+        input_value.value=""
+        aggiorna_lista_strumenti()
+        page.update()
+
     def cambia_tema(e):
         page.theme_mode = ft.ThemeMode.DARK if toggle_cambia_tema.value else ft.ThemeMode.LIGHT
         toggle_cambia_tema.label = "Tema scuro" if toggle_cambia_tema.value else "Tema chiaro"
@@ -55,7 +97,7 @@ def main(page: ft.Page):
         txt_responsabile.value = f"Responsabile: {deposito.get_responsabile()}"
 
     # Handlers per la gestione dei pulsanti utili all'inserimento di un nuovo strumento
-    # TODO
+
 
     # --- EVENTI ---
     toggle_cambia_tema = ft.Switch(label="Tema scuro", value=True, on_change=cambia_tema)
@@ -63,6 +105,7 @@ def main(page: ft.Page):
 
     # Pulsanti per la gestione dell'inserimento di un nuovo strumento
     # TODO
+    pulsante = ft.Button("Aggiungi Strumento", on_click=aggiunta)
 
     # --- LAYOUT ---
     page.add(
@@ -81,6 +124,13 @@ def main(page: ft.Page):
 
         # Sezione 3
         # TODO
+        ft.Divider(),
+        ft.Text("Aggiungi nuovo strumento", size=20),
+        ft.Row(spacing=25,
+               controls=[input_tipo, input_marca, input_anno,MyBtnmin,input_value,MyBtnplus],
+               alignment=ft.MainAxisAlignment.CENTER),
+        pulsante,
+
 
         # Sezione 4
         ft.Divider(),
