@@ -61,7 +61,7 @@ def main(page: ft.Page):
 
     MyBtnplus= ft.IconButton(icon=ft.Icons.ADD, on_click=handler_plus, icon_color=ft.Colors.GREEN)
     MyBtnmin=  ft.IconButton(icon=ft.Icons.REMOVE,on_click=handler_minus, icon_color=ft.Colors.RED)
-    input_value= ft.TextField(value="0" , width=50, height=50)
+    input_value= ft.TextField(value="0" , width=75, height=50)
 
 
 
